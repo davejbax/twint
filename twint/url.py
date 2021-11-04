@@ -67,33 +67,37 @@ async def MobileProfile(username, init):
 async def Search(config, init):
     logme.debug(__name__ + ':Search')
     url = base
-    tweet_count = 100
+    tweet_count = 20#100
     q = ""
     params = [
-        # ('include_blocking', '1'),
-        # ('include_blocked_by', '1'),
-        # ('include_followed_by', '1'),
-        # ('include_want_retweets', '1'),
-        # ('include_mute_edge', '1'),
-        # ('include_can_dm', '1'),
+        ('include_profile_interstitial_type', '1'),
+        ('include_blocking', '1'),
+        ('include_blocked_by', '1'),
+        ('include_followed_by', '1'),
+        ('include_want_retweets', '1'),
+        ('include_mute_edge', '1'),
+        ('include_can_dm', '1'),
         ('include_can_media_tag', '1'),
-        # ('skip_status', '1'),
-        # ('include_cards', '1'),
+        ('skip_status', '1'),
+        ('cards_platform', 'Web-12'),
+        ('include_cards', '1'),
         ('include_ext_alt_text', 'true'),
         ('include_quote_count', 'true'),
         ('include_reply_count', '1'),
         ('tweet_mode', 'extended'),
         ('include_entities', 'true'),
         ('include_user_entities', 'true'),
+        ('include_ext_media_color', 'true'),
         ('include_ext_media_availability', 'true'),
         ('send_error_codes', 'true'),
         ('simple_quoted_tweet', 'true'),
         ('count', tweet_count),
-        # ('query_source', 'typed_query'),
-        # ('pc', '1'),
+        ('query_source', 'typed_query'),
+        ('pc', '1'),
         ('cursor', str(init)),
         ('spelling_corrections', '1'),
-        ('ext', 'mediaStats%2ChighlightedLabel'),
+        ('include_ext_has_nft_avatar', 'false'),
+        ('ext', 'mediaStats%2ChighlightedLabel%2CvoiceInfo%2CsuperFollowMetadata'),
         ('tweet_search_mode', 'live'),  # this can be handled better, maybe take an argument and set it then
     ]
     if not config.Popular_tweets:
