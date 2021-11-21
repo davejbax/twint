@@ -74,10 +74,10 @@ def Json(response):
     return feed, json_response["min_position"]
 
 
-def parse_tweets(config, response):
+def parse_tweets(config, response, first_response = False):
     logme.debug(__name__ + ':parse_tweets')
     response = loads(response)
-    if len(response['globalObjects']['tweets']) == 0:
+    if len(response['globalObjects']['tweets']) == 0 and not first_response:
         msg = 'No more data!'
         raise NoMoreTweetsException(msg)
     feed = []

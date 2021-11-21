@@ -1,3 +1,4 @@
+import os
 import re
 import time
 
@@ -23,6 +24,11 @@ class Token:
         self._retries = 5
         self._timeout = 10
         self.url = 'https://twitter.com'
+        self.proxies = {}
+        if 'HTTP_PROXY' in os.environ:
+            self.proxies['http'] = os.environ['HTTP_PROXY']
+        if 'HTTPS_PROXY' in os.environ:
+            self.proxies['https'] = os.environ['HTTPS_PROXY']
 
     def _request(self):
         for attempt in range(self._retries + 1):
@@ -30,7 +36,7 @@ class Token:
             req = self._session.prepare_request(requests.Request('GET', self.url))
             logme.debug(f'Retrieving {req.url}')
             try:
-                r = self._session.send(req, allow_redirects=True, timeout=self._timeout)
+                r = self._session.send(req, allow_redirects=True, timeout=self._timeout, proxies=self.proxies)
             except requests.exceptions.RequestException as exc:
                 if attempt < self._retries:
                     retrying = ', retrying'

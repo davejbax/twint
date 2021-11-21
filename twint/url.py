@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 from urllib.parse import quote
 
 mobile = "https://mobile.twitter.com"
-base = "https://api.twitter.com/2/search/adaptive.json"
+base = "https://twitter.com/i/api/2/search/adaptive.json"
 
 
 def _sanitizeQuery(_url, params):
@@ -89,17 +89,24 @@ async def Search(config, init):
         ('include_user_entities', 'true'),
         ('include_ext_media_color', 'true'),
         ('include_ext_media_availability', 'true'),
+        ('include_ext_sensitive_media_warning', 'true'),
         ('send_error_codes', 'true'),
         ('simple_quoted_tweet', 'true'),
         ('count', tweet_count),
         ('query_source', 'typed_query'),
         ('pc', '1'),
-        ('cursor', str(init)),
+    ]
+
+    if str(init) != "-1":
+        params.append(('cursor', str(init)))
+
+    params.extend([
         ('spelling_corrections', '1'),
         ('include_ext_has_nft_avatar', 'false'),
-        ('ext', 'mediaStats%2ChighlightedLabel%2CvoiceInfo%2CsuperFollowMetadata'),
+        ('ext', 'mediaStats,highlightedLabel,voiceInfo,superFollowMetadata'),
         ('tweet_search_mode', 'live'),  # this can be handled better, maybe take an argument and set it then
-    ]
+    ])
+
     if not config.Popular_tweets:
         params.append(('f', 'tweets'))
     if config.Lang:
@@ -117,10 +124,10 @@ async def Search(config, init):
         q += f" {config.Search}"
     if config.Year:
         q += f" until:{config.Year}-1-1"
-    if config.Since:
-        q += f" since:{_formatDate(config.Since)}"
     if config.Until:
         q += f" until:{_formatDate(config.Until)}"
+    if config.Since:
+        q += f" since:{_formatDate(config.Since)}"
     if config.Email:
         q += ' "mail" OR "email" OR'
         q += ' "gmail" OR "e-mail"'

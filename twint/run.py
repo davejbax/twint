@@ -56,6 +56,7 @@ class Twint:
     async def Feed(self):
         logme.debug(__name__ + ':Twint:Feed')
         consecutive_errors_count = 0
+        first_response = True
         while True:
             # this will receive a JSON string, parse it into a `dict` and do the required stuff
             try:
@@ -91,7 +92,8 @@ class Twint:
                         time.sleep(5)
                 elif self.config.Profile or self.config.TwitterSearch:
                     try:
-                        self.feed, self.init = feed.parse_tweets(self.config, response)
+                        self.feed, self.init = feed.parse_tweets(self.config, response, first_response)
+                        first_response = False
                     except NoMoreTweetsException as e:
                         logme.debug(__name__ + ':Twint:Feed:' + str(e))
                         print('[!] ' + str(e) + ' Scraping will stop now.')
